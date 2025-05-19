@@ -1,4 +1,4 @@
-import { IsEnum, IsString } from "class-validator";
+import { IsEnum, IsOptional, IsString } from "class-validator";
 // import { stateMessage } from "../enum/state-message.enum";
 
 export class CreateMessageDto {
@@ -6,7 +6,8 @@ export class CreateMessageDto {
   message:string
 
   @IsString()
-  addressees: string
+  addresses: string
 
+  @IsOptional()
   files: any[]
 }

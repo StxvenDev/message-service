@@ -1,7 +1,6 @@
 export interface IAzureMessageTable{
   id: string;
   message: string;
-  // state: stateMessage;
-  addressees: string;
+  addresses: string;
   url: string;
 }
