@@ -7,4 +7,6 @@ export class CreateMessageDto {
 
   @IsString()
   addressees: string
+
+  files: any[]
 }
