@@ -5,7 +5,7 @@ import { AzureTableService } from 'src/azure/azure-table.service';
 import { IAzureMessageTable } from 'src/azure/interfaces/azure-table.interface';
 import { MimeTypeFile } from './enum/mimetype-file.enum';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
-import { FILE_MANAGMENT_SERVICE } from 'src/config';
+import { FILE_MANAGMENT_SERVICE, NOTIFIER_SERVICE } from 'src/config';
 import { lastValueFrom } from 'rxjs';
 
 @Injectable()
@@ -13,6 +13,10 @@ export class MessageService {
   constructor(
     @Inject(FILE_MANAGMENT_SERVICE)
     private readonly fileManagmentService: ClientProxy,
+
+    @Inject(NOTIFIER_SERVICE)
+    private readonly notifierService: ClientProxy,
+
     private readonly azureTableService: AzureTableService,
   ) { }
 
@@ -38,20 +42,28 @@ export class MessageService {
         }
       })
     }
-    const urls : string[] = await lastValueFrom(
-      this.fileManagmentService.send('upload-files', {
-        files: metaFiles
-      }
-    ))
+    // const urls : string[] = await lastValueFrom(
+    //   this.fileManagmentService.send('upload-files', {
+    //     files: metaFiles
+    //   }
+    // ))
 
-    console.log(files)
-    const id = uuid()
-    const insertTable: IAzureMessageTable = {
-      id,
-      message,
-      addresses,
-      url: urls.join(','),
-    }
-    return await this.azureTableService.saveMessage(insertTable);
+    // console.log(files)
+    // const id = uuid()
+    // const insertTable: IAzureMessageTable = {
+    //   id,
+    //   message,
+    //   addresses,
+    //   url: urls.join(','),
+    // }
+    // return await this.azureTableService.saveMessage(insertTable);
+
+
+    this.notifierService.emit('send-notification', {
+      message : message,
+      to : addresses.split(','),
+    })
+
+    return '';
   }
 }

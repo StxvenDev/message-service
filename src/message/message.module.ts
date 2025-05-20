@@ -3,7 +3,7 @@ import { MessageService } from './message.service';
 import { MessageController } from './message.controller';
 import { AzureTableModule } from 'src/azure/azure-table.module';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { envs, FILE_MANAGMENT_SERVICE } from 'src/config';
+import { envs, FILE_MANAGMENT_SERVICE, NOTIFIER_SERVICE } from 'src/config';
 
 @Module({
   controllers: [MessageController],
@@ -16,6 +16,17 @@ import { envs, FILE_MANAGMENT_SERVICE } from 'src/config';
         options:{
           urls: [envs.rabbitmqUrl],
           queue: 'files-queue',
+          queueOptions: {
+            durable: true
+          },
+        }
+      },
+      {
+        name: NOTIFIER_SERVICE,
+        transport: Transport.RMQ,
+        options:{
+          urls: [envs.rabbitmqUrl],
+          queue: 'notifier-queue',
           queueOptions: {
             durable: true
           },
