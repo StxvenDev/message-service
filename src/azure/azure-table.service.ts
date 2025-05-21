@@ -3,6 +3,7 @@ import { TableClient, AzureNamedKeyCredential } from '@azure/data-tables';
 import { envs } from 'src/config';
 import { RpcException } from '@nestjs/microservices';
 import { IAzureMessageTable } from './interfaces/azure-table.interface';
+import { url } from 'inspector';
 
 @Injectable()
 export class AzureTableService {
@@ -29,7 +30,10 @@ export class AzureTableService {
       return {
         status: HttpStatus.CREATED,
         message: 'Mensaje guardado en la tabla de Azure',
-        data: message,
+        data: {
+          ...message,
+          url: message.url.split(',')
+        },
       };
     } catch (error) {
       throw new RpcException({

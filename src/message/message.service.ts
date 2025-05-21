@@ -22,7 +22,6 @@ export class MessageService {
 
   async create(createMessageDto: CreateMessageDto) {
     const { files, message, addresses } = createMessageDto
-    console.log(createMessageDto)
     let metaFiles = []
     if (files) {
       const allowedTypes = Object.values(MimeTypeFile);
@@ -48,22 +47,21 @@ export class MessageService {
       }
     ))
 
-    console.log(files)
     const id = uuid()
     const insertTable: IAzureMessageTable = {
       id,
       message,
       addresses,
-      url: urls.join(','),
+      url: (urls) ? urls.join(',') : '',
     }
-    return await this.azureTableService.saveMessage(insertTable);
-
-
+    const result = await this.azureTableService.saveMessage(insertTable);
+    
     this.notifierService.emit('send-notification', {
       message : message,
       to : addresses.split(','),
+      urls: urls,
     })
 
-    return '';
+    return result;
   }
 }
