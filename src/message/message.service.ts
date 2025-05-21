@@ -42,21 +42,21 @@ export class MessageService {
         }
       })
     }
-    // const urls : string[] = await lastValueFrom(
-    //   this.fileManagmentService.send('upload-files', {
-    //     files: metaFiles
-    //   }
-    // ))
+    const urls : string[] = await lastValueFrom(
+      this.fileManagmentService.send('upload-files', {
+        files: metaFiles
+      }
+    ))
 
-    // console.log(files)
-    // const id = uuid()
-    // const insertTable: IAzureMessageTable = {
-    //   id,
-    //   message,
-    //   addresses,
-    //   url: urls.join(','),
-    // }
-    // return await this.azureTableService.saveMessage(insertTable);
+    console.log(files)
+    const id = uuid()
+    const insertTable: IAzureMessageTable = {
+      id,
+      message,
+      addresses,
+      url: urls.join(','),
+    }
+    return await this.azureTableService.saveMessage(insertTable);
 
 
     this.notifierService.emit('send-notification', {
